@@ -27,5 +27,6 @@ class JWTMiddleware
             }
             return response()->json(['msg' => 'Token not found']);
         }
+        return $next($request);
     }
 }

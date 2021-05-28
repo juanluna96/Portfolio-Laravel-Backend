@@ -23,7 +23,10 @@ class AuthController extends Controller
     {
         $data = request()->all();
         $data['password'] = Hash::make(request()->password);
-        User::create($data);
+        $user = User::create($data);
+        return response()->json([
+            'data' => $user
+        ]);
     }
 
     /**
@@ -59,6 +62,16 @@ class AuthController extends Controller
     }
 
     /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me()
+    {
+        return response()->json(auth()->user());
+    }
+
+    /**
      * Log the user out (Invalidate the token).
      *
      * @return \Illuminate\Http\JsonResponse
@@ -67,6 +80,8 @@ class AuthController extends Controller
     {
         Auth::logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ]);
     }
 }
