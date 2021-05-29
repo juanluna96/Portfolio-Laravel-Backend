@@ -15,6 +15,14 @@ class CreateBiographiesTable extends Migration
     {
         Schema::create('biographies', function (Blueprint $table) {
             $table->id();
+            $table->text('description');
+            $table->text('stacks_description');
+            $table->string('phone_1');
+            $table->string('phone_2');
+            $table->string('email_1');
+            $table->string('email_2');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

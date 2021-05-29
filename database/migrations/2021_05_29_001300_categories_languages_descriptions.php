@@ -15,6 +15,11 @@ class CategoriesLanguagesDescriptions extends Migration
     {
         Schema::create('categories_languages_descriptions', function (Blueprint $table) {
             $table->id();
+            $table->text('description');
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories');
+            $table->unsignedBigInteger('language_id');
+            $table->foreign('language_id')->references('id')->on('languages');
             $table->timestamps();
         });
     }

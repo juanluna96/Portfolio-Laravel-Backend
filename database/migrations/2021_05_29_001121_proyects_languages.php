@@ -15,6 +15,12 @@ class ProyectsLanguages extends Migration
     {
         Schema::create('proyects_languages', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->text('description');
+            $table->unsignedBigInteger('proyect_id');
+            $table->foreign('proyect_id')->references('id')->on('proyects');
+            $table->unsignedBigInteger('language_id');
+            $table->foreign('language_id')->references('id')->on('languages');
             $table->timestamps();
         });
     }
