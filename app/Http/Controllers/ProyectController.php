@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Language;
 use App\Proyect;
+use App\Language;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ProyectController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt', ['except' => ['index', 'all']]);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -15,27 +23,32 @@ class ProyectController extends Controller
      */
     public function index($locale)
     {
+        $proyects = Proyect::all();
+
+        return response()->json([
+            'data' => $proyects
+        ], 200);
+    }
+
+    /**
+     * Display a listing of the resource by language.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function languages($locale)
+    {
         $language = Language::where('abbreviation', $locale)->first();
         $proyects = $language->proyects;
 
         foreach ($proyects as $proyect) {
-            $image = $proyect->images;
+            $images = $proyect->images;
             $categories = $proyect->categories;
+            $company = $proyect->company;
         }
 
         return response()->json([
             'data' => $proyects
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        ], 200);
     }
 
     /**
@@ -46,7 +59,23 @@ class ProyectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|unique:proyects|max:255',
+            'url' => 'required|string|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => $validator->errors()
+            ], 400);
+        }
+
+        $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
+        $proyect = Proyect::create($data);
+        return response()->json([
+            'data' => $proyect
+        ], 201);
     }
 
     /**
@@ -57,18 +86,14 @@ class ProyectController extends Controller
      */
     public function show(Proyect $proyect)
     {
-        //
-    }
+        $languages = $proyect->languages;
+        $images = $proyect->images;
+        $categories = $proyect->categories;
+        $company = $proyect->company;
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Proyect  $proyect
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Proyect $proyect)
-    {
-        //
+        return response()->json([
+            'data' => $proyect
+        ], 200);
     }
 
     /**
@@ -80,7 +105,23 @@ class ProyectController extends Controller
      */
     public function update(Request $request, Proyect $proyect)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'unique:proyects|max:255',
+            'url' => 'string|max:255',
+            'company_id' => 'numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => $validator->errors()
+            ], 400);
+        }
+
+        $data = $request->all();
+        $proyect->update($data);
+        return response()->json([
+            'data' => $proyect
+        ], 201);
     }
 
     /**
@@ -91,6 +132,10 @@ class ProyectController extends Controller
      */
     public function destroy(Proyect $proyect)
     {
-        //
+        $proyect->delete();
+
+        return response()->json([
+            'message' => 'Proyecto eliminado exitosamente'
+        ]);
     }
 }

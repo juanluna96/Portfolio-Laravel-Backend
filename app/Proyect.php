@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Proyect extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title', 'url', 'user_id', 'company_id'
+    ];
+
+    /**
      * Get the user that owns the Proyect
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

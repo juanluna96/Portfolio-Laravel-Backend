@@ -19,7 +19,7 @@ class CreateProyectsTable extends Migration
             $table->string('url');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedBigInteger('company_id');
+            $table->unsignedBigInteger('company_id')->nullable();
             $table->foreign('company_id')->references('id')->on('companies');
             $table->timestamps();
         });

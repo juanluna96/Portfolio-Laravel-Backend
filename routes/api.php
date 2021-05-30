@@ -26,7 +26,7 @@ Route::group([
 Route::group([
     'prefix' => '{locale}'
 ], function () {
-    Route::get('proyects', 'ProyectController@index');
+    Route::get('proyects', 'ProyectController@languages');
 });
 
-Route::resource('proyects', 'ProyectController', ['except' => 'index']);
+Route::resource('proyects', 'ProyectController', ['except' => ['create', 'edit']]);
