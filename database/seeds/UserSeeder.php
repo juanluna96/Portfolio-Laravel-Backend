@@ -1,9 +1,9 @@
 <?php
 
-use App\Biography;
+use App\User;
 use Illuminate\Database\Seeder;
 
-class BiographySeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,6 +12,6 @@ class BiographySeeder extends Seeder
      */
     public function run()
     {
-        factory(Biography::class, 1)->create();
+        factory(User::class, 5)->create();
     }
 }

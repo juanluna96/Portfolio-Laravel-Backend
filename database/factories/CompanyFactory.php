@@ -7,6 +7,8 @@ use Faker\Generator as Faker;
 
 $factory->define(Company::class, function (Faker $faker) {
     return [
-        //
+        'name' => $faker->company,
+        'position' => $faker->paragraph(30),
+        'image' => $faker->image()
     ];
 });

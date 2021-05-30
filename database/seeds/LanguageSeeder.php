@@ -1,5 +1,6 @@
 <?php
 
+use App\Language;
 use Illuminate\Database\Seeder;
 
 class LanguageSeeder extends Seeder
@@ -11,6 +12,13 @@ class LanguageSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Language::create([
+            'description' => 'Español',
+            'abbreviation' => 'es'
+        ]);
+        Language::create([
+            'description' => 'English',
+            'abbreviation' => 'en'
+        ]);
     }
 }
