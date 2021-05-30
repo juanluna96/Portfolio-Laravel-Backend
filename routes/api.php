@@ -23,3 +23,10 @@ Route::group([
     Route::get('me', [AuthController::class, 'me']);
     Route::post('logout', [AuthController::class, 'logout']);
 });
+Route::group([
+    'prefix' => '{locale}'
+], function () {
+    Route::get('proyects', 'ProyectController@index');
+});
+
+Route::resource('proyects', 'ProyectController', ['except' => 'index']);

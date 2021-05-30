@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Language;
 use App\Proyect;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,19 @@ class ProyectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($locale)
     {
-        //
+        $language = Language::where('abbreviation', $locale)->first();
+        $proyects = $language->proyects;
+
+        foreach ($proyects as $proyect) {
+            $image = $proyect->images;
+            $categories = $proyect->categories;
+        }
+
+        return response()->json([
+            'data' => $proyects
+        ]);
     }
 
     /**
