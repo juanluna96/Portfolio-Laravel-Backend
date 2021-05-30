@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Biography;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -58,5 +59,25 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * Get all of the proyects for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function proyects()
+    {
+        return $this->hasMany(Proyect::class);
+    }
+
+    /**
+     * Get the biography associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function biography()
+    {
+        return $this->hasOne(Biography::class);
     }
 }

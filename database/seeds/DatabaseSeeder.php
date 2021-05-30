@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ImageSeeder::class);
         $this->call(ProyectsLanguagesSeeder::class);
         $this->call(CategoriesLanguagesDescriptionsSeeder::class);
+        $this->call(CategoriesProyectsSeeder::class);
     }
 }
