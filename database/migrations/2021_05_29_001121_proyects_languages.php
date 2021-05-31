@@ -18,7 +18,7 @@ class ProyectsLanguages extends Migration
             $table->string('title');
             $table->text('description');
             $table->unsignedBigInteger('proyect_id');
-            $table->foreign('proyect_id')->references('id')->on('proyects');
+            $table->foreign('proyect_id')->references('id')->on('proyects')->onDelete('cascade');
             $table->unsignedBigInteger('language_id');
             $table->foreign('language_id')->references('id')->on('languages');
             $table->timestamps();

@@ -23,10 +23,25 @@ Route::group([
     Route::get('me', [AuthController::class, 'me']);
     Route::post('logout', [AuthController::class, 'logout']);
 });
+
+/* -------------------------------------------------------------------------- */
+/*                           API FOR PORTFOLIO HOME                           */
+/* -------------------------------------------------------------------------- */
+
 Route::group([
     'prefix' => '{locale}'
 ], function () {
     Route::get('proyects', 'ProyectController@languages');
+    Route::get('categories', 'CategoryController@CategoriesLanguageProyects');
+    Route::get('categories/{id}', 'CategoryController@showCategoryProyects');
+    Route::get('categories/{id}/descriptions', 'CategoryController@CategoriesDescriptionsLanguage');
 });
 
+/* -------------------------------------------------------------------------- */
+/*                           API FOR ADMIN PORTFOLIO                          */
+/* -------------------------------------------------------------------------- */
+
+/* ---------------------- SHOW CATEGORIES WITH PROYECTS --------------------- */
+Route::get('categoriesProyects', 'CategoryController@CategoriesProyects');
 Route::resource('proyects', 'ProyectController', ['except' => ['create', 'edit']]);
+Route::resource('categories', 'CategoryController', ['except' => ['create', 'edit']]);

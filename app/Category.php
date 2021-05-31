@@ -2,10 +2,20 @@
 
 namespace App;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'color_text', 'color_bg', 'logo', 'image'
+    ];
+
     /**
      * The proyects that belong to the Category
      *
@@ -13,7 +23,7 @@ class Category extends Model
      */
     public function proyects()
     {
-        return $this->belongsToMany(Proyect::class, 'categories_proyects');
+        return $this->belongsToMany(Proyect::class, 'categories_proyects')->withTimestamps();
     }
 
     /**

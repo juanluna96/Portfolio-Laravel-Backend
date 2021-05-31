@@ -37,7 +37,7 @@ class ProyectController extends Controller
      */
     public function languages($locale)
     {
-        $language = Language::where('abbreviation', $locale)->first();
+        $language = Language::where('abbreviation', $locale)->firstOrFail();
         $proyects = $language->proyects;
 
         foreach ($proyects as $proyect) {
@@ -70,9 +70,12 @@ class ProyectController extends Controller
             ], 400);
         }
 
+        $categories = [1, 2, 3, 4];
+
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
         $proyect = Proyect::create($data);
+        $proyect->categories()->attach($categories);
         return response()->json([
             'data' => $proyect
         ], 201);
@@ -132,6 +135,7 @@ class ProyectController extends Controller
      */
     public function destroy(Proyect $proyect)
     {
+        // $proyect->categories()->sync([]);
         $proyect->delete();
 
         return response()->json([

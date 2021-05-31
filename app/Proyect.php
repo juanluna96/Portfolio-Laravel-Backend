@@ -32,7 +32,7 @@ class Proyect extends Model
      */
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'categories_proyects');
+        return $this->belongsToMany(Category::class, 'categories_proyects')->withTimestamps();
     }
 
     /**
