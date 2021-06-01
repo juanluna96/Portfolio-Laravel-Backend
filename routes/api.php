@@ -49,3 +49,5 @@ Route::resource('proyects', 'ProyectController', ['except' => ['create', 'edit']
 Route::resource('categories', 'CategoryController', ['except' => ['create', 'edit']]);
 /* ---------------------- BIOGRAPHY WITH MY INFORMATION --------------------- */
 Route::resource('biographies', 'BiographyController', ['except' => ['create', 'edit']]);
+/* --------------------------- COMPANY FOR PROYECT -------------------------- */
+Route::resource('companies', 'CompanyController', ['except' => ['create', 'edit']]);

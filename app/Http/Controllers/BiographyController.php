@@ -95,7 +95,7 @@ class BiographyController extends Controller
         }
 
         $data = $request->all();
-        $biography = $biography->update($data);
+        $biography->update($data);
         return response()->json([
             'data' => $biography
         ], 201);

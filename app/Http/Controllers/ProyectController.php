@@ -12,7 +12,7 @@ class ProyectController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index', 'all']]);
+        $this->middleware('jwt', ['except' => ['index', 'languages']]);
     }
 
 

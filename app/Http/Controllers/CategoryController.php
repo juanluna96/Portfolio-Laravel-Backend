@@ -154,7 +154,7 @@ class CategoryController extends Controller
         }
 
         $data = $request->all();
-        $category = Category::update($data);
+        $category->update($data);
         return response()->json([
             'data' => $category
         ], 201);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CompanyController extends Controller
 {
@@ -14,17 +15,11 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $companies = Company::all();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json([
+            'data' => $companies
+        ], 200);
     }
 
     /**
@@ -35,7 +30,24 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:companies|string',
+            'position_es' => 'required|string',
+            'position_en' => 'required|string',
+            'image' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => $validator->errors()
+            ], 400);
+        }
+
+        $data = $request->all();
+        $company = Company::create($data);
+        return response()->json([
+            'data' => $company
+        ], 201);
     }
 
     /**
@@ -46,18 +58,9 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Company  $company
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Company $company)
-    {
-        //
+        return response()->json([
+            'data' => $company
+        ], 200);
     }
 
     /**
@@ -69,7 +72,24 @@ class CompanyController extends Controller
      */
     public function update(Request $request, Company $company)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'unique:companies|string',
+            'position_es' => 'string',
+            'position_en' => 'string',
+            'image' => 'string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => $validator->errors()
+            ], 400);
+        }
+
+        $data = $request->all();
+        $company->update($data);
+        return response()->json([
+            'data' => $company
+        ], 201);
     }
 
     /**
@@ -80,6 +100,10 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        $company->delete();
+
+        return response()->json([
+            'message' => 'Proyecto eliminado exitosamente'
+        ]);
     }
 }
