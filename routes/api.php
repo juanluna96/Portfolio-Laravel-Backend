@@ -43,5 +43,9 @@ Route::group([
 
 /* ---------------------- SHOW CATEGORIES WITH PROYECTS --------------------- */
 Route::get('categoriesProyects', 'CategoryController@CategoriesProyects');
+/* -------------------------------- PROYECTS -------------------------------- */
 Route::resource('proyects', 'ProyectController', ['except' => ['create', 'edit']]);
+/* ------------------------------- CATEGORIES ------------------------------- */
 Route::resource('categories', 'CategoryController', ['except' => ['create', 'edit']]);
+/* ---------------------- BIOGRAPHY WITH MY INFORMATION --------------------- */
+Route::resource('biographies', 'BiographyController', ['except' => ['create', 'edit']]);

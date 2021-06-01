@@ -8,8 +8,10 @@ use Faker\Generator as Faker;
 
 $factory->define(Biography::class, function (Faker $faker) {
     return [
-        'description' => $faker->paragraph(30),
-        'stacks_description' => $faker->paragraph(40),
+        'description_en' => $faker->paragraph(30),
+        'description_es' => $faker->paragraph(30),
+        'stacks_description_en' => $faker->paragraph(40),
+        'stacks_description_es' => $faker->paragraph(40),
         'phone_1' => $faker->phoneNumber,
         'phone_2' => $faker->phoneNumber,
         'email_1' => $faker->safeEmail,
