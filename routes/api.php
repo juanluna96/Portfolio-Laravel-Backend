@@ -51,3 +51,6 @@ Route::resource('categories', 'CategoryController', ['except' => ['create', 'edi
 Route::resource('biographies', 'BiographyController', ['except' => ['create', 'edit']]);
 /* --------------------------- COMPANY FOR PROYECT -------------------------- */
 Route::resource('companies', 'CompanyController', ['except' => ['create', 'edit']]);
+/* -------------------------- MESSAGE TO CONTACT ME ------------------------- */
+Route::resource('contacts', 'ContactController', ['except' => ['create', 'edit']]);
+Route::get('newsmessages', 'ContactController@news');

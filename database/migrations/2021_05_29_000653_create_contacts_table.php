@@ -17,9 +17,12 @@ class CreateContactsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('country');
+            $table->string('countryCode');
             $table->string('phone');
             $table->string('address');
             $table->text('message');
+            $table->boolean('read')->default(0);
             $table->timestamps();
         });
     }

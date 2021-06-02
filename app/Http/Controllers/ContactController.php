@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
@@ -14,17 +15,24 @@ class ContactController extends Controller
      */
     public function index()
     {
-        //
+        $messages = Contact::orderBy('read', 'ASC')->orderBy('created_at', 'DESC')->get();
+        return response()->json([
+            'data' => $messages
+        ], 200);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display the count of new contacts message.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function news()
     {
-        //
+        $newsMessagesCount = Contact::where('read', 0)->count();
+
+        return response()->json([
+            'data' => $newsMessagesCount
+        ], 200);
     }
 
     /**
@@ -35,7 +43,27 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'email' => 'required|email|unique:contacts',
+            'country' => 'required|string',
+            'countryCode' => 'required|string',
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'address' => 'required|string',
+            'message' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => $validator->errors()
+            ], 400);
+        }
+
+        $data = $request->all();
+        $message = Contact::create($data);
+        return response()->json([
+            'data' => $message
+        ], 201);
     }
 
     /**
@@ -46,18 +74,9 @@ class ContactController extends Controller
      */
     public function show(Contact $contact)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Contact  $contact
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Contact $contact)
-    {
-        //
+        return response()->json([
+            'data' => $contact,
+        ], 200);
     }
 
     /**
@@ -69,7 +88,28 @@ class ContactController extends Controller
      */
     public function update(Request $request, Contact $contact)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'string',
+            'email' => 'email|unique:contacts',
+            'country' => 'string',
+            'countryCode' => 'string',
+            'phone' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'address' => 'string',
+            'message' => 'string',
+            'read' => 'boolean'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => $validator->errors()
+            ], 400);
+        }
+
+        $data = $request->all();
+        $contact->update($data);
+        return response()->json([
+            'data' => $contact
+        ], 201);
     }
 
     /**
@@ -80,6 +120,9 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact)
     {
-        //
+        $contact->delete();
+        return response()->json([
+            'message' => 'Mensaje de contacto eliminado correctamente',
+        ]);
     }
 }
