@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ImageController extends Controller
 {
@@ -14,17 +15,13 @@ class ImageController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $images = Image::all();
+        foreach ($images as $image) {
+            $proyect = $image->proyect;
+        }
+        return response()->json([
+            'data' => $images
+        ], 200);
     }
 
     /**
@@ -35,7 +32,22 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'url_image' => 'required|string',
+            'proyect_id' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => $validator->errors()
+            ], 400);
+        }
+
+        $data = $request->all();
+        $message = Image::create($data);
+        return response()->json([
+            'data' => $message
+        ], 201);
     }
 
     /**
@@ -46,30 +58,9 @@ class ImageController extends Controller
      */
     public function show(Image $image)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Image  $image
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Image $image)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Image  $image
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Image $image)
-    {
-        //
+        return response()->json([
+            'data' => $image
+        ], 200);
     }
 
     /**
@@ -80,6 +71,9 @@ class ImageController extends Controller
      */
     public function destroy(Image $image)
     {
-        //
+        $image->delete();
+        return response()->json([
+            'message' => 'Imagen eliminada correctamente',
+        ]);
     }
 }
