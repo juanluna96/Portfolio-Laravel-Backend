@@ -13,12 +13,14 @@ class LanguageSeeder extends Seeder
     public function run()
     {
         Language::create([
-            'description' => 'Español',
-            'abbreviation' => 'es'
+            'description' => 'spanish',
+            'abbreviation' => 'es',
+            'flag' => 'spa'
         ]);
         Language::create([
-            'description' => 'English',
-            'abbreviation' => 'en'
+            'description' => 'english',
+            'abbreviation' => 'en',
+            'flag' => 'en'
         ]);
     }
 }

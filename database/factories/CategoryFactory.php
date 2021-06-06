@@ -12,6 +12,7 @@ $factory->define(Category::class, function (Faker $faker) {
         'color_text' => $faker->hexColor,
         'color_bg' => $faker->hexColor,
         'logo' => 'fas fa-random',
-        'image' => $faker->image(),
+        'image' => $faker->image('public/storage/categories', 56, 49, null, false),
+        'imageBig' => $faker->image('public/storage/categories', 341, 296, null, false),
     ];
 });

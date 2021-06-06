@@ -41,13 +41,14 @@ class ProyectController extends Controller
         $proyects = $language->proyects;
 
         foreach ($proyects as $proyect) {
+            $location = $proyect->languages->firstWhere('language_id', $language->id);
             $images = $proyect->images;
             $categories = $proyect->categories;
             $company = $proyect->company;
         }
 
         return response()->json([
-            'data' => $proyects
+            'proyects' => $proyects
         ], 200);
     }
 

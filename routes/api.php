@@ -34,7 +34,8 @@ Route::group([
     /* ---------------------- GET ALL PROYECTS BY LANGUAGE ---------------------- */
     Route::get('proyects', 'ProyectController@languages');
     /* -------------- GET CATEGORIES THAT HAVE PROYECTS BY LANGUAGE ------------- */
-    Route::get('categories', 'CategoryController@CategoriesLanguageProyects');
+    Route::get('categories', 'CategoryController@CategoriesWithProyects');
+    Route::get('categories_descriptions', 'CategoryController@CategoriesDescriptionWithAllLanguages');
     Route::get('categories/{id}', 'CategoryController@showCategoryProyects');
     /* --------------- GET DESCRIPTIONS OF CATEGORIES BY LANGUAGES -------------- */
     Route::get('categories/{id}/descriptions', 'CategoryController@CategoriesDescriptionsLanguage');
@@ -58,6 +59,6 @@ Route::resource('companies', 'CompanyController', ['except' => ['create', 'edit'
 Route::resource('contacts', 'ContactController', ['except' => ['create', 'edit']]);
 Route::get('newsmessages', 'ContactController@news');
 /* --------------------------- IMAGES FOR PROYECTS -------------------------- */
-Route::resource('images', 'ContactController', ['except' => ['create', 'edit', 'update']]);
+Route::resource('images', 'ImageController', ['except' => ['create', 'edit', 'update']]);
 /* -------------------------------- LANGUAGES ------------------------------- */
-Route::resource('languages', 'ContactController', ['only' => ['index']]);
+Route::resource('languages', 'LanguageController', ['only' => ['index']]);

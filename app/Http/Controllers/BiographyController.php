@@ -64,7 +64,7 @@ class BiographyController extends Controller
     public function show(Biography $biography)
     {
         return response()->json([
-            'data' => $biography
+            'biography' => $biography
         ], 200);
     }
 

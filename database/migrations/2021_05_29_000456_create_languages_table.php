@@ -17,6 +17,7 @@ class CreateLanguagesTable extends Migration
             $table->id();
             $table->string('description');
             $table->string('abbreviation', 5);
+            $table->string('flag', 5);
             $table->timestamps();
         });
     }

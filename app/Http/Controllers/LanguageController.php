@@ -16,7 +16,7 @@ class LanguageController extends Controller
     {
         $languages = Language::all();
         return response()->json([
-            'data' => $languages
+            'languages' => $languages
         ], 200);
     }
 }

@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Image::class, function (Faker $faker) {
     return [
-        'url_image' => $faker->image(),
+        'url_image' => $faker->image('public/storage/proyects', 640, 480, null, false),
         'proyect_id' => Proyect::all()->random()->id,
     ];
 });

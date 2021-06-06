@@ -13,7 +13,7 @@ class Language extends Model
      */
     public function proyects()
     {
-        return $this->belongsToMany(Proyect::class, 'proyects_languages')->withPivot('title', 'description');
+        return $this->belongsToMany(Proyect::class, 'proyects_languages')->as('language_proyects')->withPivot('title', 'description');
     }
 
     /**
@@ -23,6 +23,6 @@ class Language extends Model
      */
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'categories_languages_descriptions')->withPivot('description');
+        return $this->belongsToMany(Category::class, 'categories_languages_descriptions')->as('categories_languages')->withPivot('description');
     }
 }

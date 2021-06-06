@@ -32,7 +32,7 @@ class Proyect extends Model
      */
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'categories_proyects')->withTimestamps();
+        return $this->belongsToMany(Category::class, 'categories_proyects')->as('categories_proyects')->withTimestamps();
     }
 
     /**
@@ -62,6 +62,6 @@ class Proyect extends Model
      */
     public function languages()
     {
-        return $this->belongsToMany(Language::class, 'proyects_languages')->withPivot('title', 'description');
+        return $this->belongsToMany(Language::class, 'proyects_languages')->as('language_proyects')->withPivot('title', 'description');
     }
 }

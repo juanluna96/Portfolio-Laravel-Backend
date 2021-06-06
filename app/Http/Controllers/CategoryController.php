@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Proyect;
 use App\Category;
 use App\Language;
 use Illuminate\Http\Request;
@@ -84,16 +85,46 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function CategoriesLanguageProyects($locale)
+    public function CategoriesWithProyects($locale)
     {
-        $language = Language::where('abbreviation', $locale)->firstOrFail()->id;
+        $language = Language::where('abbreviation', $locale)->firstOrFail();
+        $languages = Language::all()->count();
+        $categories = Category::with('proyects')->with('languages')->has('proyects')->get();
 
-        $categories = Category::with('proyects')->with('languages')->has('proyects')->whereHas('languages', function ($q)  use ($language) {
-            $q->where('language_id', $language);
-        })->get();
+        $array = [];
+        foreach ($categories as $category) {
+            $proyects = $category->proyects;
+            foreach ($proyects as $proyect) {
+                if ($proyect->languages->count() === $languages) {
+                    $array[] = $category;
+                }
+            }
+        }
 
         return response()->json([
-            'data' => $categories
+            'categories' => array_unique($array)
+        ], 200);
+    }
+
+    /**
+     * Display a listing of the resource by language.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function CategoriesDescriptionWithAllLanguages()
+    {
+        $languages = Language::all()->count();
+        $categories = Category::all();
+
+        $array = [];
+        foreach ($categories as $category) {
+            if ($category->languages->count() === $languages) {
+                $array[] = $category;
+            }
+        }
+
+        return response()->json([
+            'categories' => $array
         ], 200);
     }
 
@@ -110,7 +141,7 @@ class CategoryController extends Controller
         $descriptions = $category->languages()->where('language_id', $language)->get();
 
         return response()->json([
-            'data' => $descriptions
+            'descriptions' => $descriptions
         ], 200);
     }
 
@@ -122,11 +153,18 @@ class CategoryController extends Controller
     public function showCategoryProyects($locale, $category_id)
     {
         $language = Language::where('abbreviation', $locale)->firstOrFail();
-        $category = $language->categories->where('id', $category_id)->first();
+        $category = Category::where('id', $category_id)->firstOrFail();
         $proyects = $category->proyects;
 
+        foreach ($proyects as $proyect) {
+            $location = $proyect->languages;
+            $images = $proyect->images;
+            $categories = $proyect->categories;
+            $company = $proyect->company;
+        }
+
         return response()->json([
-            'data' => $category
+            'category' => $category
         ], 200);
     }
 
