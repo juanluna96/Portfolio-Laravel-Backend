@@ -13,7 +13,7 @@ class Biography extends Model
      * @var array
      */
     protected $fillable = [
-        'description_en', 'description_es', 'stacks_description_en', 'stacks_description_es', 'phone_1', 'phone_2', 'email_1', 'email_2', 'user_id'
+        'description', 'stacks_description', 'about_me', 'phone_1', 'phone_2', 'email_1', 'email_2', 'user_id'
     ];
 
     /**

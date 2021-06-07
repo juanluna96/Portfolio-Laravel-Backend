@@ -8,8 +8,10 @@ use Faker\Generator as Faker;
 $factory->define(Company::class, function (Faker $faker) {
     return [
         'name' => $faker->company,
-        'position_es' => $faker->paragraph(30),
-        'position_en' => $faker->paragraph(30),
-        'image' => $faker->image()
+        'position' => json_encode([
+            'en' => $this->faker->sentence($nbWords = 7, $variableNbWords = true),
+            'es' => $this->faker->sentence($nbWords = 7, $variableNbWords = true),
+        ]),
+        'image' => $faker->image('public/storage/companies', 640, 480, null, false)
     ];
 });
