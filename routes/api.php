@@ -39,6 +39,8 @@ Route::group([
     Route::get('categories/{id}', 'CategoryController@showCategoryProyects');
     /* --------------- GET DESCRIPTIONS OF CATEGORIES BY LANGUAGES -------------- */
     Route::get('categories/{id}/descriptions', 'CategoryController@CategoriesDescriptionsLanguage');
+    /* --------------- SEND CONTACT FORM AND VALIDATE BY LANGUAGE --------------- */
+    Route::post('contacts', 'ContactController@store');
 });
 
 /* -------------------------------------------------------------------------- */
@@ -56,7 +58,7 @@ Route::resource('biographies', 'BiographyController', ['except' => ['create', 'e
 /* --------------------------- COMPANY FOR PROYECT -------------------------- */
 Route::resource('companies', 'CompanyController', ['except' => ['create', 'edit']]);
 /* -------------------------- MESSAGE TO CONTACT ME ------------------------- */
-Route::resource('contacts', 'ContactController', ['except' => ['create', 'edit']]);
+Route::resource('contacts', 'ContactController', ['except' => ['create', 'edit', 'store']]);
 Route::get('newsmessages', 'ContactController@news');
 /* --------------------------- IMAGES FOR PROYECTS -------------------------- */
 Route::resource('images', 'ImageController', ['except' => ['create', 'edit', 'update']]);

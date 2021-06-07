@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
@@ -41,28 +42,30 @@ class ContactController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $locale)
     {
+        App::setLocale($locale);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'email' => 'required|email|unique:contacts',
             'country' => 'required|string',
             'countryCode' => 'required|string',
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'phone' => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'address' => 'required|string',
             'message' => 'required|string'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'data' => $validator->errors()
+                'validation' => $validator->errors()
             ], 400);
         }
 
         $data = $request->all();
         $message = Contact::create($data);
         return response()->json([
-            'data' => $message
+            'message' => $message
         ], 201);
     }
 
