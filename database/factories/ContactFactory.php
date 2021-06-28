@@ -14,6 +14,7 @@ $factory->define(Contact::class, function (Faker $faker) {
         'phone' => $faker->phoneNumber,
         'address' => $faker->address,
         'message' => $faker->paragraph(20),
-        'read' => $faker->numberBetween(0, 1)
+        'read' => $faker->numberBetween(0, 1),
+        'favorite' => $faker->numberBetween(0, 1)
     ];
 });

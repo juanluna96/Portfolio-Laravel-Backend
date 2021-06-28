@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Proyect;
 use App\Category;
 use App\Language;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
@@ -20,7 +20,7 @@ class CategoryController extends Controller
         $categories = Category::all();
 
         return response()->json([
-            'data' => $categories
+            'categories' => $categories
         ], 200);
     }
 
@@ -51,16 +51,27 @@ class CategoryController extends Controller
             'color_text' => 'required|string|max:255',
             'color_bg' => 'required|string|max:255',
             'logo' => 'required|string|max:255',
-            'image' => 'required|string|max:255'
+            'image' => 'required|mimes:jpeg,jpg,png,gif',
+            'imageBig' => 'required|mimes:jpeg,jpg,png,gif'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'data' => $validator->errors()
+                'errors' => $validator->errors()
             ], 400);
         }
 
         $data = $request->all();
+
+        $route_image = $request['image']->store('categories', 'public');
+        $img = Image::make(public_path("storage/{$route_image}"))->fit(56, 49);
+        $img->save();
+        $data['image'] = $route_image;
+
+        $route_imageBig = $request['imageBig']->store('categories', 'public');
+        $imgBig = Image::make(public_path("storage/{$route_imageBig}"))->fit(341, 296);
+        $imgBig->save();
+        $data['imageBig'] = $route_imageBig;
         $category = Category::create($data);
         return response()->json([
             'data' => $category
@@ -75,8 +86,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        $category->languages;
         return response()->json([
-            'data' => $category
+            'category' => $category
         ], 200);
     }
 
@@ -175,27 +187,50 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $category)
     {
+        $category = Category::findOrFail($category);
+
         $validator = Validator::make($request->all(), [
-            'name' => 'unique:categories|max:255',
-            'color_text' => 'string|max:255',
-            'color_bg' => 'string|max:255',
-            'logo' => 'string|max:255',
-            'image' => 'string|max:255'
+            'name' => 'required|max:255',
+            'color_text' => 'required|string|max:255',
+            'color_bg' => 'required|string|max:255',
+            'logo' => 'required|string|max:255',
+            'image' => 'required',
+            'imageBig' => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'data' => $validator->errors()
+                'errors' => $validator->errors()
             ], 400);
         }
 
         $data = $request->all();
+
+        if ($request['image'] !== $category->image) {
+            // Borrar la imagen anterior y guardar la imagen nueva para actualizar la imagen
+            unlink(public_path('storage/' . $category->image));
+            $route_image = $request['image']->store('categories', 'public');
+            $img = Image::make(public_path("storage/{$route_image}"))->fit(56, 49);
+            $img->save();
+            $data['image'] = $route_image;
+        }
+
+        if ($request['imageBig'] !== $category->imageBig) {
+            // Borrar la imagen anterior y guardar la imagen nueva para actualizar la imagen
+            unlink(public_path('storage/' . $category->imageBig));
+            $route_imageBig = $request['imageBig']->store('categories', 'public');
+            $img = Image::make(public_path("storage/{$route_imageBig}"))->fit(341, 296);
+            $img->save();
+            $data['imageBig'] = $route_imageBig;
+        }
+
         $category->update($data);
+
         return response()->json([
             'data' => $category
-        ], 201);
+        ], 200);
     }
 
     /**
@@ -208,11 +243,56 @@ class CategoryController extends Controller
     {
         $category->languages()->sync([]);
         $category->proyects()->sync([]);
+        unlink(public_path('storage/' . $category->image));
+        unlink(public_path('storage/' . $category->imageBig));
 
         $category->delete();
 
         return response()->json([
-            'message' => 'Categoria eliminada exitosamente'
+            'category' => $category
+        ]);
+    }
+
+    /**
+     * Remove the specified description of categories from storage.
+     *
+     * @param  \App\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyDescription(Request $request)
+    {
+        $category = Category::findOrFail($request->category_id);
+        $description = $request->description;
+        $category->languages()->newPivotQuery()->where('category_id', $request->category_id)->where('description', $request->description)->where('language_id', $request->language_id)->delete();
+
+        return response()->json([
+            'description' => $description
+        ], 202);
+    }
+
+    /**
+     * Add a description to a category.
+     *
+     * @param  \App\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+    public function storeLanguageCategoryDescription(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'description' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'validations' => $validator->errors()
+            ], 400);
+        }
+
+        $category = Category::findOrFail($request->category_id);
+        $language = Language::findOrFail($request->language_id);
+        $category->languages()->attach($request->language_id, $request->all());
+        return response()->json([
+            'language' => $language,
         ]);
     }
 }

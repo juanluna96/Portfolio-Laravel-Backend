@@ -23,6 +23,7 @@ class CreateContactsTable extends Migration
             $table->string('address');
             $table->text('message');
             $table->boolean('read')->default(0);
+            $table->boolean('favorite')->default(0);
             $table->timestamps();
         });
     }

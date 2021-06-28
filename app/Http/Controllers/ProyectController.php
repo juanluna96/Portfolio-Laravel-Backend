@@ -12,7 +12,7 @@ class ProyectController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index', 'languages']]);
+        $this->middleware('jwt', ['except' => ['index', 'show', 'languages']]);
     }
 
 
@@ -21,7 +21,7 @@ class ProyectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($locale)
+    public function index()
     {
         $proyects = Proyect::all();
 

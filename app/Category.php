@@ -13,7 +13,7 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'color_text', 'color_bg', 'logo', 'image'
+        'name', 'color_text', 'color_bg', 'logo', 'image', 'imageBig'
     ];
 
     /**
@@ -33,6 +33,6 @@ class Category extends Model
      */
     public function languages()
     {
-        return $this->belongsToMany(Language::class, 'categories_languages_descriptions')->as('categories_languages')->withPivot('description');
+        return $this->belongsToMany(Language::class, 'categories_languages_descriptions')->as('categories_languages')->withPivot('description')->withTimestamps();
     }
 }

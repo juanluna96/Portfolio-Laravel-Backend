@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -30,16 +31,31 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
+        $languages = Language::all();
+        $rules = [];
+
+        foreach ($languages as $language) {
+            $rules[$language->abbreviation] = 'required|string';
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:companies|string',
-            'position_es' => 'required|string',
-            'position_en' => 'required|string',
+            'position' => 'required|string|json',
             'image' => 'required|string'
         ]);
 
-        if ($validator->fails()) {
+        $position = [
+            json_decode($request->position)
+        ];
+
+        $validatorJson = Validator::make($position, $rules);
+
+        if ($validator->fails() || $validatorJson->fails()) {
             return response()->json([
-                'data' => $validator->errors()
+                'data' => [
+                    'inputs' =>   $validator->errors(),
+                    'languages' => $validatorJson->errors()
+                ]
             ], 400);
         }
 

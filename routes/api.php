@@ -52,7 +52,10 @@ Route::get('categoriesProyects', 'CategoryController@CategoriesProyects');
 /* -------------------------------- PROYECTS -------------------------------- */
 Route::resource('proyects', 'ProyectController', ['except' => ['create', 'edit']]);
 /* ------------------------------- CATEGORIES ------------------------------- */
-Route::resource('categories', 'CategoryController', ['except' => ['create', 'edit']]);
+Route::resource('categories', 'CategoryController', ['except' => ['create', 'edit', 'update']]);
+Route::post('categories/{id}', 'CategoryController@update');
+Route::post('categories_description', 'CategoryController@storeLanguageCategoryDescription');
+Route::post('delete_descriptions', 'CategoryController@destroyDescription');
 /* ---------------------- BIOGRAPHY WITH MY INFORMATION --------------------- */
 Route::resource('biographies', 'BiographyController', ['except' => ['create', 'edit']]);
 /* --------------------------- COMPANY FOR PROYECT -------------------------- */
