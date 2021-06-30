@@ -6,6 +6,7 @@ use App\Company;
 use App\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 class CompanyController extends Controller
 {
@@ -19,7 +20,7 @@ class CompanyController extends Controller
         $companies = Company::all();
 
         return response()->json([
-            'data' => $companies
+            'companies' => $companies
         ], 200);
     }
 
@@ -33,6 +34,7 @@ class CompanyController extends Controller
     {
         $languages = Language::all();
         $rules = [];
+        $data = json_decode($request->position, true);
 
         foreach ($languages as $language) {
             $rules[$language->abbreviation] = 'required|string';
@@ -41,28 +43,27 @@ class CompanyController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:companies|string',
             'position' => 'required|string|json',
-            'image' => 'required|string'
+            'image' => 'required|mimes:jpeg,jpg,png,gif'
         ]);
 
-        $position = [
-            json_decode($request->position)
-        ];
-
+        $position = json_decode($request->position, true);
         $validatorJson = Validator::make($position, $rules);
+
+        $errors = [];
+        $errors = validateInputsJson('inputs', $validator, $errors);
+        $errors = validateInputsJson('languages', $validatorJson, $errors);
 
         if ($validator->fails() || $validatorJson->fails()) {
             return response()->json([
-                'data' => [
-                    'inputs' =>   $validator->errors(),
-                    'languages' => $validatorJson->errors()
-                ]
+                'errors' => $errors
             ], 400);
         }
 
         $data = $request->all();
-        $company = Company::create($data);
+        $newCompany = saveNewImage($request['image'], 'image', $data, 'companies', 506, 486);
+        $company = Company::create($newCompany);
         return response()->json([
-            'data' => $company
+            'company' => $company
         ], 201);
     }
 
@@ -75,7 +76,7 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         return response()->json([
-            'data' => $company
+            'company' => $company
         ], 200);
     }
 
@@ -86,26 +87,42 @@ class CompanyController extends Controller
      * @param  \App\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Company $company)
+    public function update(Request $request, $id)
     {
+        $company = Company::findOrFail($id);
+        $languages = Language::all();
+        $rules = [];
+        $data = json_decode($request->position, true);
+
+        foreach ($languages as $language) {
+            $rules[$language->abbreviation] = 'required|string';
+        }
+
         $validator = Validator::make($request->all(), [
-            'name' => 'unique:companies|string',
-            'position_es' => 'string',
-            'position_en' => 'string',
-            'image' => 'string'
+            'name' => 'required|string',
+            'position' => 'required|string|json',
+            'image' => 'required'
         ]);
 
-        if ($validator->fails()) {
+        $position = json_decode($request->position, true);
+        $validatorJson = Validator::make($position, $rules);
+
+        $errors = [];
+        $errors = validateInputsJson('inputs', $validator, $errors);
+        $errors = validateInputsJson('languages', $validatorJson, $errors);
+
+        if ($validator->fails() || $validatorJson->fails()) {
             return response()->json([
-                'data' => $validator->errors()
+                'errors' => $errors
             ], 400);
         }
 
         $data = $request->all();
-        $company->update($data);
+        $updatedData = replaceNewImage($company->image, $request['image'], 'image', $data, 'companies',  506, 486);
+        $company->update($updatedData);
         return response()->json([
-            'data' => $company
-        ], 201);
+            'company' => $company
+        ], 200);
     }
 
     /**
@@ -116,10 +133,12 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
+        deleteImage($company->image);
+
         $company->delete();
 
         return response()->json([
-            'message' => 'Proyecto eliminado exitosamente'
+            'company' => $company
         ]);
     }
 }

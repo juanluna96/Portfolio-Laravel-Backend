@@ -59,7 +59,8 @@ Route::post('delete_descriptions', 'CategoryController@destroyDescription');
 /* ---------------------- BIOGRAPHY WITH MY INFORMATION --------------------- */
 Route::resource('biographies', 'BiographyController', ['except' => ['create', 'edit']]);
 /* --------------------------- COMPANY FOR PROYECT -------------------------- */
-Route::resource('companies', 'CompanyController', ['except' => ['create', 'edit']]);
+Route::resource('companies', 'CompanyController', ['except' => ['create', 'edit', 'update']]);
+Route::post('companies/{id}', 'CompanyController@update');
 /* -------------------------- MESSAGE TO CONTACT ME ------------------------- */
 Route::resource('contacts', 'ContactController', ['except' => ['create', 'edit', 'store']]);
 Route::get('newsmessages', 'ContactController@news');

@@ -7,6 +7,7 @@ use App\Language;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 class CategoryController extends Controller
 {
@@ -63,16 +64,11 @@ class CategoryController extends Controller
 
         $data = $request->all();
 
-        $route_image = $request['image']->store('categories', 'public');
-        $img = Image::make(public_path("storage/{$route_image}"))->fit(56, 49);
-        $img->save();
-        $data['image'] = $route_image;
+        $dataImage = saveNewImage($request['image'], 'image', $data, 'categories', 56, 49);
 
-        $route_imageBig = $request['imageBig']->store('categories', 'public');
-        $imgBig = Image::make(public_path("storage/{$route_imageBig}"))->fit(341, 296);
-        $imgBig->save();
-        $data['imageBig'] = $route_imageBig;
-        $category = Category::create($data);
+        $newCategory = saveNewImage($request['imageBig'], 'imageBig', $dataImage, 'categories', 341, 296);
+
+        $category = Category::create($newCategory);
         return response()->json([
             'data' => $category
         ], 201);
@@ -208,25 +204,10 @@ class CategoryController extends Controller
 
         $data = $request->all();
 
-        if ($request['image'] !== $category->image) {
-            // Borrar la imagen anterior y guardar la imagen nueva para actualizar la imagen
-            unlink(public_path('storage/' . $category->image));
-            $route_image = $request['image']->store('categories', 'public');
-            $img = Image::make(public_path("storage/{$route_image}"))->fit(56, 49);
-            $img->save();
-            $data['image'] = $route_image;
-        }
+        $dataImage = replaceNewImage($category->image, $request['image'], 'image', $data, 'categories', 56, 49);
+        $updated = replaceNewImage($category->imageBig, $request['imageBig'], 'imageBig', $dataImage, 'categories', 341, 296);
 
-        if ($request['imageBig'] !== $category->imageBig) {
-            // Borrar la imagen anterior y guardar la imagen nueva para actualizar la imagen
-            unlink(public_path('storage/' . $category->imageBig));
-            $route_imageBig = $request['imageBig']->store('categories', 'public');
-            $img = Image::make(public_path("storage/{$route_imageBig}"))->fit(341, 296);
-            $img->save();
-            $data['imageBig'] = $route_imageBig;
-        }
-
-        $category->update($data);
+        $category->update($updated);
 
         return response()->json([
             'data' => $category
@@ -243,8 +224,8 @@ class CategoryController extends Controller
     {
         $category->languages()->sync([]);
         $category->proyects()->sync([]);
-        unlink(public_path('storage/' . $category->image));
-        unlink(public_path('storage/' . $category->imageBig));
+        deleteImage($category->image);
+        deleteImage($category->imageBig);
 
         $category->delete();
 
