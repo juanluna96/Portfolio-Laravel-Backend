@@ -13,7 +13,7 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'color_text', 'color_bg', 'logo', 'image', 'imageBig'
+        'name', 'color_text', 'color_bg', 'logo', 'image', 'imageBig', 'area_id'
     ];
 
     /**

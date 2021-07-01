@@ -34,7 +34,6 @@ class CompanyController extends Controller
     {
         $languages = Language::all();
         $rules = [];
-        $data = json_decode($request->position, true);
 
         foreach ($languages as $language) {
             $rules[$language->abbreviation] = 'required|string';

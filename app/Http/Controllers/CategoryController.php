@@ -53,7 +53,8 @@ class CategoryController extends Controller
             'color_bg' => 'required|string|max:255',
             'logo' => 'required|string|max:255',
             'image' => 'required|mimes:jpeg,jpg,png,gif',
-            'imageBig' => 'required|mimes:jpeg,jpg,png,gif'
+            'imageBig' => 'required|mimes:jpeg,jpg,png,gif',
+            'area_id' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -193,6 +194,7 @@ class CategoryController extends Controller
             'color_bg' => 'required|string|max:255',
             'logo' => 'required|string|max:255',
             'image' => 'required',
+            'area_id' => 'required',
             'imageBig' => 'required'
         ]);
 

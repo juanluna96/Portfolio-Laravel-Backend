@@ -20,7 +20,7 @@ class ProyectsLanguages extends Migration
             $table->unsignedBigInteger('proyect_id');
             $table->foreign('proyect_id')->references('id')->on('proyects')->onDelete('cascade');
             $table->unsignedBigInteger('language_id');
-            $table->foreign('language_id')->references('id')->on('languages');
+            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
             $table->timestamps();
         });
     }

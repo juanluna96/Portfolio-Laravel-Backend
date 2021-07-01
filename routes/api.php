@@ -52,7 +52,8 @@ Route::get('categoriesProyects', 'CategoryController@CategoriesProyects');
 /* -------------------------------- PROYECTS -------------------------------- */
 Route::resource('proyects', 'ProyectController', ['except' => ['create', 'edit']]);
 /* ------------------------------- AREAS ------------------------------- */
-Route::resource('areas', 'AreaController', ['except' => ['create', 'edit']]);
+Route::resource('areas', 'AreaController', ['except' => ['create', 'edit', 'update']]);
+Route::post('areas/{id}', 'AreaController@update');
 Route::get('areas_categories', 'AreaController@areasWithCategories');
 /* ------------------------------- CATEGORIES ------------------------------- */
 Route::resource('categories', 'CategoryController', ['except' => ['create', 'edit', 'update']]);

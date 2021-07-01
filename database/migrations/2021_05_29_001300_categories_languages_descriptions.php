@@ -17,9 +17,9 @@ class CategoriesLanguagesDescriptions extends Migration
             $table->id();
             $table->text('description');
             $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->unsignedBigInteger('language_id');
-            $table->foreign('language_id')->references('id')->on('languages');
+            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
             $table->timestamps();
         });
     }
