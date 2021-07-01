@@ -35,4 +35,14 @@ class Category extends Model
     {
         return $this->belongsToMany(Language::class, 'categories_languages_descriptions')->as('categories_languages')->withPivot('description')->withTimestamps();
     }
+
+    /**
+     * Get the area that owns the Category
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function area()
+    {
+        return $this->belongsTo(Area::class);
+    }
 }

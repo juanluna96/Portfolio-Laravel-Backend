@@ -20,6 +20,9 @@ class CreateCategoriesTable extends Migration
             $table->string('color_bg');
             $table->string('logo')->nullable();
             $table->string('image');
+            $table->string('imageBig');
+            $table->unsignedBigInteger('area_id');
+            $table->foreign('area_id')->references('id')->on('areas')->onDelete('cascade');
             $table->timestamps();
         });
     }
