@@ -41,3 +41,8 @@ function deleteImage($image)
         unlink(public_path('storage/' . $image));
     }
 }
+
+function isJson($string)
+{
+    return is_object(json_decode($string));
+}

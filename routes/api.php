@@ -61,7 +61,9 @@ Route::post('categories/{id}', 'CategoryController@update');
 Route::post('categories_description', 'CategoryController@storeLanguageCategoryDescription');
 Route::post('delete_descriptions', 'CategoryController@destroyDescription');
 /* ---------------------- BIOGRAPHY WITH MY INFORMATION --------------------- */
-Route::resource('biographies', 'BiographyController', ['except' => ['create', 'edit']]);
+Route::resource('biographies', 'BiographyController', ['except' => ['create', 'edit', 'update']]);
+Route::post('biographies/{id}', 'BiographyController@update');
+Route::get('lastest/biography', 'BiographyController@lastest');
 /* --------------------------- COMPANY FOR PROYECT -------------------------- */
 Route::resource('companies', 'CompanyController', ['except' => ['create', 'edit', 'update']]);
 Route::post('companies/{id}', 'CompanyController@update');
