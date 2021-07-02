@@ -70,6 +70,9 @@ Route::post('companies/{id}', 'CompanyController@update');
 /* -------------------------- MESSAGE TO CONTACT ME ------------------------- */
 Route::resource('contacts', 'ContactController', ['except' => ['create', 'edit', 'store']]);
 Route::get('newsmessages', 'ContactController@news');
+/* -------------------------- CERTIFICATES ABOUT ME ------------------------- */
+Route::resource('certificates', 'CertificateController', ['except' => ['create', 'edit']]);
+Route::post('certificates/{id}', 'CertificateController@update');
 /* --------------------------- IMAGES FOR PROYECTS -------------------------- */
 Route::resource('images', 'ImageController', ['except' => ['create', 'edit', 'update']]);
 /* -------------------------------- LANGUAGES ------------------------------- */

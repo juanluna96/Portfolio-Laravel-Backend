@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ContactSeeder::class);
         $this->call(ProyectSeeder::class);
         $this->call(ImageSeeder::class);
+        $this->call(CertificateSeeder::class);
         $this->call(ProyectsLanguagesSeeder::class);
         $this->call(CategoriesLanguagesDescriptionsSeeder::class);
         $this->call(CategoriesProyectsSeeder::class);
