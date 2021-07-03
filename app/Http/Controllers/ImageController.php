@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Image;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,12 +16,12 @@ class ImageController extends Controller
      */
     public function index()
     {
-        $images = Image::all();
+        $images = Image::orderByDesc('created_at')->paginate(8);
         foreach ($images as $image) {
             $proyect = $image->proyect;
         }
         return response()->json([
-            'data' => $images
+            'images' => $images
         ], 200);
     }
 
@@ -33,20 +34,23 @@ class ImageController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'url_image' => 'required|string',
+            'url_image' => 'required|mimes:jpeg,jpg,png,gif',
             'proyect_id' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'data' => $validator->errors()
+                'errors' => $validator->errors()
             ], 400);
         }
 
         $data = $request->all();
-        $message = Image::create($data);
+        $data['size'] = bytesToHuman($request['url_image']->getSize());
+        $data['name'] = Carbon::now()->timestamp . '.' . $request['url_image']->extension();
+        $dataImage = saveNewImage($request['url_image'], 'url_image', $data, 'proyects', 1280, 720);
+        $image = Image::create($dataImage);
         return response()->json([
-            'data' => $message
+            'image' => $image
         ], 201);
     }
 
@@ -71,9 +75,12 @@ class ImageController extends Controller
      */
     public function destroy(Image $image)
     {
+        deleteImage($image->url_image);
+
         $image->delete();
+
         return response()->json([
-            'message' => 'Imagen eliminada correctamente',
+            'image' => $image,
         ]);
     }
 }

@@ -11,7 +11,7 @@ $factory->define(Image::class, function (Faker $faker) {
     $date = Carbon::now()->timestamp;
     return [
         'name' => $date . '.jpg',
-        'size' => $faker->numerify('###############'),
+        'size' => $faker->numberBetween(2, 10),
         'url_image' => $faker->image('public/storage/proyects', 640, 480, null, false),
         'proyect_id' => Proyect::all()->random()->id,
     ];
