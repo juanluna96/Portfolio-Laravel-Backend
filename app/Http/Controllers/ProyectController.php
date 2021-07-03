@@ -12,9 +12,8 @@ class ProyectController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index', 'show', 'languages']]);
+        $this->middleware('jwt', ['except' => ['index', 'show', 'languages', 'store', 'update', 'destroy']]);
     }
-
 
     /**
      * Display a listing of the resource.
@@ -25,8 +24,14 @@ class ProyectController extends Controller
     {
         $proyects = Proyect::all();
 
+        foreach ($proyects as $proyect) {
+            $proyect->languages;
+            $proyect->company;
+            $proyect->categories;
+        }
+
         return response()->json([
-            'data' => $proyects
+            'proyects' => $proyects
         ], 200);
     }
 
@@ -61,22 +66,22 @@ class ProyectController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:proyects|max:255',
-            'url' => 'required|string|max:255'
+            'title' => 'required|string|unique:proyects|max:255',
+            'url' => 'required|string|max:255',
+            'categories' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'data' => $validator->errors()
+                'errors' => $validator->errors()
             ], 400);
         }
 
-        $categories = [1, 2, 3, 4];
-
         $data = $request->all();
-        $data['user_id'] = Auth::user()->id;
+        // $data['user_id'] = Auth::user()->id;
+        $data['user_id'] = 1;
         $proyect = Proyect::create($data);
-        $proyect->categories()->attach($categories);
+        $proyect->categories()->attach($request->categories);
         return response()->json([
             'data' => $proyect
         ], 201);
@@ -96,7 +101,7 @@ class ProyectController extends Controller
         $company = $proyect->company;
 
         return response()->json([
-            'data' => $proyect
+            'proyect' => $proyect
         ], 200);
     }
 
@@ -110,16 +115,19 @@ class ProyectController extends Controller
     public function update(Request $request, Proyect $proyect)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'unique:proyects|max:255',
-            'url' => 'string|max:255',
-            'company_id' => 'numeric'
+            'title' => 'required|string|max:255',
+            'url' => 'required|string|max:255',
+            'categories' => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'data' => $validator->errors()
+                'errors' => $validator->errors()
             ], 400);
         }
+
+        $proyect->categories()->sync([]);
+        $proyect->categories()->attach($request->categories);
 
         $data = $request->all();
         $proyect->update($data);
@@ -136,11 +144,11 @@ class ProyectController extends Controller
      */
     public function destroy(Proyect $proyect)
     {
-        // $proyect->categories()->sync([]);
+        $proyect->categories()->sync([]);
         $proyect->delete();
 
         return response()->json([
-            'message' => 'Proyecto eliminado exitosamente'
+            'proyect' => $proyect
         ]);
     }
 }

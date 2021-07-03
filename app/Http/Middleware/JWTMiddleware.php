@@ -20,12 +20,12 @@ class JWTMiddleware
             $user = JWTAuth::parseToken()->authenticate();
         } catch (\Throwable $e) {
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
-                return response()->json(['msg' => 'Invalid token']);
+                return response()->json(['errors' => ['token' => 'Invalid token']], 400);
             }
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
-                return response()->json(['msg' => 'Token is expired']);
+                return response()->json(['errors' => ['token' => 'Token is expired']], 400);
             }
-            return response()->json(['msg' => 'Token not found']);
+            return response()->json(['errors' => ['token' => 'Token not found']], 400);
         }
         return $next($request);
     }
