@@ -68,7 +68,9 @@ Route::get('lastest/biography', 'BiographyController@lastest');
 Route::resource('companies', 'CompanyController', ['except' => ['create', 'edit', 'update']]);
 Route::post('companies/{id}', 'CompanyController@update');
 /* -------------------------- MESSAGE TO CONTACT ME ------------------------- */
-Route::resource('contacts', 'ContactController', ['except' => ['create', 'edit', 'store']]);
+Route::resource('contacts', 'ContactController', ['except' => ['create', 'edit', 'store', 'index']]);
+Route::get('contacts/{field?}/{order?}', 'ContactController@index');
+Route::post('contacts_search', 'ContactController@search');
 Route::get('newsmessages', 'ContactController@news');
 /* -------------------------- CERTIFICATES ABOUT ME ------------------------- */
 Route::resource('certificates', 'CertificateController', ['except' => ['create', 'edit']]);

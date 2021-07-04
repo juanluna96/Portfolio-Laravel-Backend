@@ -14,11 +14,11 @@ class ContactController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($field = null, $order = 'DESC')
     {
-        $messages = Contact::orderBy('read', 'ASC')->orderBy('created_at', 'DESC')->get();
+        $messages = $field ? Contact::orderBy($field, $order)->paginate(8) : Contact::orderBy('read', 'ASC')->orderBy('created_at', 'DESC')->orderBy('favorite', 'DESC')->paginate(8);
         return response()->json([
-            'data' => $messages
+            'messages' => $messages
         ], 200);
     }
 
@@ -91,27 +91,10 @@ class ContactController extends Controller
      */
     public function update(Request $request, Contact $contact)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'string',
-            'email' => 'email|unique:contacts',
-            'country' => 'string',
-            'countryCode' => 'string',
-            'phone' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'address' => 'string',
-            'message' => 'string',
-            'read' => 'boolean'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'data' => $validator->errors()
-            ], 400);
-        }
-
         $data = $request->all();
         $contact->update($data);
         return response()->json([
-            'data' => $contact
+            'message' => $contact
         ], 201);
     }
 
@@ -125,7 +108,33 @@ class ContactController extends Controller
     {
         $contact->delete();
         return response()->json([
-            'message' => 'Mensaje de contacto eliminado correctamente',
+            'message' => $contact,
         ]);
+    }
+
+    /**
+     * Display a listing of the resource by search.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $search = $request->search;
+        if ($search != "") {
+            $contact = Contact::where('name', 'LIKE', '%' . $search . '%')->orWhere('message', 'LIKE', '%' . $search . '%')->orderBy('read', 'ASC')->orderBy('created_at', 'DESC')->paginate(5);
+            if (count($contact) > 0) {
+                return response()->json([
+                    'messages' => $contact
+                ]);
+            }
+            return response()->json([
+                'errors' => 'No pudimos encontrar registros para tu búsqueda'
+            ], 400);
+        } else {
+            $contact = Contact::orderBy('read', 'ASC')->orderBy('created_at', 'DESC')->orderBy('favorite', 'DESC')->paginate(8);
+            return response()->json([
+                'messages' => $contact
+            ]);
+        }
     }
 }
