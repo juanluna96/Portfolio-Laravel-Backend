@@ -47,10 +47,13 @@ Route::group([
 /*                           API FOR ADMIN PORTFOLIO                          */
 /* -------------------------------------------------------------------------- */
 
+/* ---------------------------- USER INFORMATION ---------------------------- */
+Route::get('counts', 'UserController@counts');
 /* ---------------------- SHOW CATEGORIES WITH PROYECTS --------------------- */
 Route::get('categoriesProyects', 'CategoryController@CategoriesProyects');
 /* -------------------------------- PROYECTS -------------------------------- */
 Route::resource('proyects', 'ProyectController', ['except' => ['create', 'edit']]);
+Route::post('proyects_descriptions', 'ProyectController@saveDescriptionLanguage');
 /* ------------------------------- AREAS ------------------------------- */
 Route::resource('areas', 'AreaController', ['except' => ['create', 'edit', 'update']]);
 Route::post('areas/{id}', 'AreaController@update');
@@ -71,7 +74,6 @@ Route::post('companies/{id}', 'CompanyController@update');
 Route::resource('contacts', 'ContactController', ['except' => ['create', 'edit', 'store', 'index']]);
 Route::get('contacts/{field?}/{order?}', 'ContactController@index');
 Route::post('contacts_search', 'ContactController@search');
-Route::get('newsmessages', 'ContactController@news');
 /* -------------------------- CERTIFICATES ABOUT ME ------------------------- */
 Route::resource('certificates', 'CertificateController', ['except' => ['create', 'edit']]);
 Route::post('certificates/{id}', 'CertificateController@update');

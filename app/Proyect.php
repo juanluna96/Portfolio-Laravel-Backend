@@ -62,6 +62,6 @@ class Proyect extends Model
      */
     public function languages()
     {
-        return $this->belongsToMany(Language::class, 'proyects_languages')->as('language_proyects')->withPivot('title', 'description');
+        return $this->belongsToMany(Language::class, 'proyects_languages')->as('language_proyects')->withPivot('title', 'description')->withTimestamps();
     }
 }

@@ -12,7 +12,7 @@ class ProyectController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index', 'show', 'languages', 'store', 'update', 'destroy']]);
+        $this->middleware('jwt', ['except' => ['index', 'show', 'languages', 'store', 'update', 'saveDescriptionLanguage', 'destroy']]);
     }
 
     /**
@@ -145,10 +145,48 @@ class ProyectController extends Controller
     public function destroy(Proyect $proyect)
     {
         $proyect->categories()->sync([]);
+        $proyect->languages()->sync([]);
         $proyect->delete();
 
         return response()->json([
             'proyect' => $proyect
+        ]);
+    }
+
+    /**
+     * Store a description in language and proyed created resource in storage.
+     *
+     * @param  \App\Proyect  $proyect
+     * @return \Illuminate\Http\Response
+     */
+    public function saveDescriptionLanguage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'proyect_id' => 'required|numeric',
+            'language_id' => 'required|numeric',
+            'title' => 'required|string',
+            'description' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $proyect = Proyect::findOrFail($request->proyect_id);
+        $hasLanguage = $proyect->languages->contains($request->language_id);
+
+        if ($hasLanguage) {
+            $proyect->languages()->updateExistingPivot($request->language_id, $request->all(), false);
+            return response()->json([
+                'action' => 'editado',
+            ]);
+        }
+
+        $proyect->languages()->attach($request->language_id, $request->all());
+        return response()->json([
+            'action' => 'añadido',
         ]);
     }
 }

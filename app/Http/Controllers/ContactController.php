@@ -23,20 +23,6 @@ class ContactController extends Controller
     }
 
     /**
-     * Display the count of new contacts message.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function news()
-    {
-        $newsMessagesCount = Contact::where('read', 0)->count();
-
-        return response()->json([
-            'data' => $newsMessagesCount
-        ], 200);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -78,7 +64,7 @@ class ContactController extends Controller
     public function show(Contact $contact)
     {
         return response()->json([
-            'data' => $contact,
+            'message' => $contact,
         ], 200);
     }
 
