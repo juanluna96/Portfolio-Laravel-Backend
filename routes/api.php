@@ -76,6 +76,7 @@ Route::get('contacts/{field?}/{order?}', 'ContactController@index');
 Route::post('contacts_search', 'ContactController@search');
 /* -------------------------- CERTIFICATES ABOUT ME ------------------------- */
 Route::resource('certificates', 'CertificateController', ['except' => ['create', 'edit']]);
+Route::get('paginate/certificates', 'CertificateController@paginated');
 Route::post('certificates/{id}', 'CertificateController@update');
 /* --------------------------- IMAGES FOR PROYECTS -------------------------- */
 Route::resource('images', 'ImageController', ['except' => ['create', 'edit', 'update']]);

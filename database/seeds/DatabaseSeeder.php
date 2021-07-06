@@ -11,18 +11,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(UserSeeder::class);
+        // $this->call(UserSeeder::class);
         $this->call(LanguageSeeder::class);
-        $this->call(CompanySeeder::class);
-        $this->call(AreaSeeder::class);
-        $this->call(CategorySeeder::class);
-        $this->call(BiographySeeder::class);
-        $this->call(ContactSeeder::class);
-        $this->call(ProyectSeeder::class);
-        $this->call(ImageSeeder::class);
-        $this->call(CertificateSeeder::class);
-        $this->call(ProyectsLanguagesSeeder::class);
-        $this->call(CategoriesLanguagesDescriptionsSeeder::class);
-        $this->call(CategoriesProyectsSeeder::class);
+        // $this->call(CompanySeeder::class);
+        // $this->call(AreaSeeder::class);
+        // $this->call(CategorySeeder::class);
+        // $this->call(BiographySeeder::class);
+        // $this->call(ContactSeeder::class);
+        // $this->call(ProyectSeeder::class);
+        // $this->call(ImageSeeder::class);
+        // $this->call(CertificateSeeder::class);
+        // $this->call(ProyectsLanguagesSeeder::class);
+        // $this->call(CategoriesLanguagesDescriptionsSeeder::class);
+        // $this->call(CategoriesProyectsSeeder::class);
     }
 }

@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt', ['except' => ['store']]);
+    }
+
     /**
      * Display a listing of the resource.
      *

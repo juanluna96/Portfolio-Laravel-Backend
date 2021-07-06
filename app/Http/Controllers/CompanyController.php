@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\File;
 
 class CompanyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt');
+    }
+
     /**
      * Display a listing of the resource.
      *

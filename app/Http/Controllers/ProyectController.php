@@ -12,7 +12,7 @@ class ProyectController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index', 'show', 'languages', 'store', 'update', 'saveDescriptionLanguage', 'destroy']]);
+        $this->middleware('jwt', ['except' => ['languages']]);
     }
 
     /**
@@ -78,8 +78,7 @@ class ProyectController extends Controller
         }
 
         $data = $request->all();
-        // $data['user_id'] = Auth::user()->id;
-        $data['user_id'] = 1;
+        $data['user_id'] = Auth::user()->id;
         $proyect = Proyect::create($data);
         $proyect->categories()->attach($request->categories);
         return response()->json([

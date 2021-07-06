@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Validator;
 
 class BiographyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt', ['except' => ['lastest']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -76,8 +81,7 @@ class BiographyController extends Controller
         }
 
         $data = $request->all();
-        // $data['user_id'] = Auth::user()->id;
-        $data['user_id'] = 1;
+        $data['user_id'] = Auth::user()->id;
         $biography = Biography::create($data);
         return response()->json([
             'biography' => $biography,

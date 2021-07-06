@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ImageController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt');
+    }
+
     /**
      * Display a listing of the resource.
      *

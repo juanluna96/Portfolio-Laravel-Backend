@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class AreaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt', ['except' => ['index']]);
+    }
+
     /**
      * Display a listing of the resource.
      *

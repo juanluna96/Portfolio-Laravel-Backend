@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\File;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt', ['except' => ['CategoriesProyects', 'CategoriesDescriptionsLanguage', 'CategoriesWithProyects', 'CategoriesDescriptionWithAllLanguages', 'showCategoryProyects']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,6 +24,10 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
+
+        foreach ($categories as $category) {
+            $category->area;
+        }
 
         return response()->json([
             'categories' => $categories

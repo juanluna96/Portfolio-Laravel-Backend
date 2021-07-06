@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class CertificateController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt', ['except' => ['paginated']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,6 +22,20 @@ class CertificateController extends Controller
     public function index()
     {
         $certificates = Certificate::all();
+
+        return response()->json([
+            'certificates' => $certificates
+        ], 200);
+    }
+
+    /**
+     * Display a listing of the resource in a paginate.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function paginated()
+    {
+        $certificates = Certificate::paginate(12);
 
         return response()->json([
             'certificates' => $certificates
