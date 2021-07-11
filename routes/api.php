@@ -32,11 +32,11 @@ Route::group([
     'prefix' => '{locale}'
 ], function () {
     /* ---------------------- GET ALL PROYECTS BY LANGUAGE ---------------------- */
-    Route::get('proyects', 'ProyectController@languages');
+    Route::post('proyects', 'ProyectController@languages');
     /* -------------- GET CATEGORIES THAT HAVE PROYECTS BY LANGUAGE ------------- */
     Route::get('categories', 'CategoryController@CategoriesWithProyects');
     Route::get('categories_descriptions', 'CategoryController@CategoriesDescriptionWithAllLanguages');
-    Route::get('categories/{id}', 'CategoryController@showCategoryProyects');
+    Route::get('categories/{name}', 'CategoryController@showCategoryProyects');
     /* --------------- GET DESCRIPTIONS OF CATEGORIES BY LANGUAGES -------------- */
     Route::get('categories/{id}/descriptions', 'CategoryController@CategoriesDescriptionsLanguage');
     /* --------------- SEND CONTACT FORM AND VALIDATE BY LANGUAGE --------------- */

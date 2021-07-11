@@ -168,11 +168,11 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showCategoryProyects($locale, $category_id)
+    public function showCategoryProyects($locale, $category)
     {
         $language = Language::where('abbreviation', $locale)->firstOrFail();
-        $category = Category::where('id', $category_id)->firstOrFail();
-        $proyects = $category->proyects;
+        $category = Category::where('name', $category)->firstOrFail();
+        $proyects = $category->proyects()->paginate(8);
 
         foreach ($proyects as $proyect) {
             $location = $proyect->languages;
@@ -182,7 +182,8 @@ class CategoryController extends Controller
         }
 
         return response()->json([
-            'category' => $category
+            'category' => $category,
+            'proyects' => $proyects
         ], 200);
     }
 

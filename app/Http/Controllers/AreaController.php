@@ -11,7 +11,7 @@ class AreaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index']]);
+        $this->middleware('jwt', ['except' => ['index', 'areasWithCategories']]);
     }
 
     /**
@@ -150,7 +150,10 @@ class AreaController extends Controller
         $areas = Area::with('categories')->has('categories')->get();
 
         foreach ($areas as $area) {
-            $categories = $area->categories()->with('proyects')->with('languages')->has('proyects');
+            $categories = $area->categories;
+            foreach ($categories as $category) {
+                $proyects = $category->proyects;
+            }
         }
 
         return response()->json([

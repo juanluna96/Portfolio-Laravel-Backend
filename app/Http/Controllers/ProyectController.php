@@ -12,7 +12,7 @@ class ProyectController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['languages']]);
+        $this->middleware('jwt', ['except' => ['languages', 'search']]);
     }
 
     /**
@@ -40,16 +40,30 @@ class ProyectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function languages($locale)
+    public function languages($locale, Request $request)
     {
         $language = Language::where('abbreviation', $locale)->firstOrFail();
-        $proyects = $language->proyects;
+        $search = $request->search;
+        $order = $request->order;
+        if ($search !== "") {
+            $proyects_get = $language->proyects()->where(function ($query) use ($search) {
+                $query->where('proyects_languages.description', 'LIKE', '%' . $search . '%')->orWhere('proyects_languages.title', 'LIKE', '%' . $search . '%');
+            });
+        } else {
+            $proyects_get = $language->proyects();
+        }
+
+        if ($order) {
+            $proyects = $proyects_get->orderBy('proyects_languages.title', $order)->paginate(8);
+        } else {
+            $proyects = $proyects_get->paginate(8);
+        }
 
         foreach ($proyects as $proyect) {
-            $location = $proyect->languages->firstWhere('language_id', $language->id);
-            $images = $proyect->images;
-            $categories = $proyect->categories;
-            $company = $proyect->company;
+            $proyect->languages->firstWhere('language_id', $language->id);
+            $proyect->images;
+            $proyect->categories;
+            $proyect->company;
         }
 
         return response()->json([
