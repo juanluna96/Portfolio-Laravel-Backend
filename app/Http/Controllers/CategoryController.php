@@ -119,8 +119,10 @@ class CategoryController extends Controller
             }
         }
 
+        $categoriesList = array_values(array_unique($array));
+
         return response()->json([
-            'categories' => array_unique($array)
+            'categories' => array_unique($categoriesList)
         ], 200);
     }
 
