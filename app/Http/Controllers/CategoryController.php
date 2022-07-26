@@ -133,18 +133,13 @@ class CategoryController extends Controller
      */
     public function CategoriesDescriptionWithAllLanguages()
     {
-        $languages = Language::all()->count();
-        $categories = Category::all();
-
-        $array = [];
-        foreach ($categories as $category) {
-            if ($category->languages->count() === $languages) {
-                $array[] = $category;
-            }
-        }
+        // Get current language
+        $language = Language::where('abbreviation', app()->getLocale())->firstOrFail();
+        // Get categories languages descriptions with the current language
+        $categories = Category::with('languages')->has('languages')->get();
 
         return response()->json([
-            'categories' => $array
+            'categories' =>  $categories
         ], 200);
     }
 
